@@ -1,0 +1,84 @@
+zero
+one
+two
+three
+four
+five
+six
+seven
+eight
+nine
+ten
+eleven
+twelve
+thirteen
+fourteen
+fifteen
+sixteen
+seventeen
+eighteen
+nineteen
+twenty
+thirty
+forty
+fifty
+sixty
+seventy
+eighty
+ninety
+hundred
+tone0
+tone1
+tone2
+tone3
+tone4
+tone5
+tone6
+tone7
+tone8
+tone9
+tone10
+tone11
+tone12
+oh
+a.m.
+p.m.
+again
+attention
+hello
+this is sensaphone unit
+the time is
+the temperature is
+degrees
+the electricity is
+sound level
+alert condition
+battery condition
+listen to the sound level for fifteen seconds
+have a good day
+indicate you have received warning message by dialing
+within 30 seconds
+on
+off
+high
+low
+okay
+clear
+enter
+entry error
+no number
+number limit
+high temperature
+low temperature
+limit
+this is telephone number
+please leave a message
+replace batteries
+sensa-pause
+exists
+alert condition
+sensa-pause2
+sensa-pause3
+warning message received by telephone number
+this is sensaphone
+beep beep beep system test okay

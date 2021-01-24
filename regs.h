@@ -1,0 +1,15 @@
+#ifndef __REGS_H__
+#define __REGS_H__
+
+#define REG_RESET 0
+#define REG_ECHO 1
+
+#define REG_SPEECH_LAST_WORD_OUT 10
+#define REG_SPEECH_BUF_COUNT 11
+#define REG_SPEECH_STATE 12
+#define REG_SPEECH_QUEUE_BANK 13
+#define REG_SPEECH_QUEUE_WORD 14
+#define REG_SPEECH_LAST_BANK_OUT 15
+#define REG_SPEECH_READY 16
+
+#endif

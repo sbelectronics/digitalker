@@ -1,0 +1,208 @@
+#!/usr/bin/python -u
+
+import argparse
+import os
+import sys
+import time
+import traceback
+import vocab
+
+from digitalker import DigitalkerBoard, SPEECH_IDLE
+from digitalker_tcp import DigitalkerTcp
+from digitalker_serial import DigitalkerSerial
+
+glo_bus = None
+glo_pi = None
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+
+    defs = {"bank": 0,
+            "pigpio": False,
+            "diags": False,
+            "outputFile": None,
+            "outputAppend": False,
+            "serial": None,
+            "tcp": None,
+            "daemon": False,
+            "remote": False}
+
+    _help = 'Use pigpio (default: %s)' % defs['pigpio']
+    parser.add_argument(
+        '-P', '--pigpio', dest='pigpio', action='store_true',
+        default=defs['pigpio'],
+        help=_help)
+
+    _help = 'Enter diags mode after command (default: %s)' % defs['diags']
+    parser.add_argument(
+        '-D', '--diags', dest='diags', action='store_true',
+        default=defs['diags'],
+        help=_help)
+
+    _help = 'Send output to file (default: %s)' % defs['outputFile']
+    parser.add_argument(
+        '-O', '--outputfile', dest='outputFile', action='store', type=str,
+        default=defs['outputFile'],
+        help=_help)
+
+    _help = 'Append to log file(default: %s)' % defs['outputAppend']
+    parser.add_argument(
+        '-A', '--append', dest='outputAppend', action='store_true',
+        default=defs['outputAppend'],
+        help=_help)
+
+    _help = 'Daemonize (default: %s)' % defs['daemon']
+    parser.add_argument(
+        '-d', '--daemon', dest='daemon', action='store_true',
+        default=defs['daemon'],
+        help=_help)
+
+    _help = 'Listen for UDP remote commands (default: %s)' % defs['daemon']
+    parser.add_argument(
+        '-r', '--remote', dest='remote', action='store_true',
+        default=defs['remote'],
+        help=_help)
+
+    _help = 'Set Bank (default: %d)' % defs['bank']
+    parser.add_argument(
+        '-b', '--bank', dest='bank', action='store', type=int,
+        default=defs['bank'],
+        help=_help)
+
+    _help = 'Connect via TCP host:port (default: %s)' % defs['tcp']
+    parser.add_argument(
+        '-t', '--tcp', dest='tcp', action='store', type=str,
+        default=defs['tcp'],
+        help=_help)
+
+    _help = 'Connect via serial device (default: %s)' % defs['serial']
+    parser.add_argument(
+        '-s', '--serial', dest='serial', action='store', type=str,
+        default=defs['serial'],
+        help=_help)          
+
+    parser.add_argument('cmd', help='command')
+    parser.add_argument('args', help='arguments', nargs='*')
+
+    args = parser.parse_args()
+
+    return args
+
+
+def initSpeechBoard(args):
+    if args.tcp:
+        sb = DigitalkerTcp(addr=args.tcp)
+    elif args.serial:
+        sb = DigitalkerSerial(dev=args.serial)
+    elif glo_pi:
+        sb = DigitalkerBoard(pi=glo_pi)
+    else:
+        sb = DigitalkerBoard(bus=glo_bus)
+
+    return sb
+
+
+def initBus(args):
+    global glo_bus, glo_pi
+
+    if args.tcp:
+        # nothing to see here, move along...
+        return
+
+    if args.pigpio:
+        try:
+            import pigpio
+            glo_pi = pigpio.pi()
+            if not glo_pi.connected:
+                print "Failed to connect to pigpio; defaulting to smbus"
+                glo_pi = None
+        except ImportError:
+            print "Failed to import pigpio; defaulting to smbus"
+            glo_pi = None
+
+    if not glo_pi:
+        import smbus
+        if not glo_bus:
+            glo_bus = smbus.SMBus(1)
+
+
+def diags(sb):
+    while True:
+        sb.dumpRegs()
+        time.sleep(1)
+
+
+def sayAll(sb):
+    for (bank, contents) in vocab.vocab.items():
+        for (index, word) in contents.items():
+            print "bank: %d, index: %03d, word: %s" % (bank, index, word)
+            sb.sayWord(bank<<8 | index)
+            time.sleep(0.1)
+            while sb.readSpeechState() != SPEECH_IDLE:
+                time.sleep(0.1)
+            time.sleep(0.25)
+
+def execute(args):
+    initBus(args)
+
+    sb = initSpeechBoard(args)
+
+    # All board commands
+
+    if args.cmd == "diags":
+        args.diags = True
+    elif args.cmd == "show":
+        sb.dumpRegs()
+
+    # SpeechBoard Commands
+
+    elif args.cmd == "say":
+        if len(args.args)<1:
+            raise Exception("Invalid number of arguments to say")
+        for arg in args.args:
+            sb.say(arg)
+
+    elif args.cmd == "sayindex":
+        if len(args.args)<1:
+            raise Exception("Invalid number of arguments to sayindex")
+        for arg in args.args:
+            sb.sayWord(int(arg) + (args.bank<<8))
+
+    elif args.cmd == "sayall":
+        sayAll(sb)
+
+    else:
+        raise Exception("Unknown command %s" % args.cmd)
+
+    if args.diags:
+        diags(sb)
+
+    if args.remote:
+        while True:
+            time.sleep(1)
+
+
+def main():
+    args = parse_args()
+
+    if args.outputFile is not None:
+        if args.outputAppend:
+            outputFile = open(args.outputFile, "a", 0)
+        else:
+            outputFile = open(args.outputFile, "w", 0)
+    else:
+        outputFile = sys.stdout
+
+    if args.daemon:
+        raise Exception("Daemon not supported")
+        #context = daemon.DaemonContext(stdout=outputFile)
+        #with context:
+        #    execute(args)
+    else:
+        sys.stdout = outputFile
+        execute(args)
+
+
+if __name__ == "__main__":
+    main()
