@@ -97,7 +97,7 @@ then
 there
 this
 thousand
-107: thunnel?
+107: total
 try
 turn
 type

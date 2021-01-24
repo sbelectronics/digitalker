@@ -24,7 +24,7 @@ house
 in
 infant
 interior
-interuder
+intruder
 here
 key
 keypad
@@ -93,6 +93,6 @@ water
 where
 west
 window
-weave
+wing
 work
 zone
