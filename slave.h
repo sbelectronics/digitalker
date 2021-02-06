@@ -3,4 +3,6 @@
 
 void SlaveInit();
 
+uint8_t SlaveReadRegister(uint8_t reg);
+
 #endif

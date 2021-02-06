@@ -7,7 +7,8 @@ import time
 import traceback
 import vocab
 
-from digitalker import DigitalkerBoard, SPEECH_IDLE
+from digitalker import DigitalkerBoard
+from digitalker_regs import SPEECH_IDLE
 from digitalker_tcp import DigitalkerTcp
 from digitalker_serial import DigitalkerSerial
 
@@ -171,6 +172,11 @@ def execute(args):
 
     elif args.cmd == "sayall":
         sayAll(sb)
+
+    elif args.cmd == "volume":
+        if len(args.args)<1:
+            raise Exception("Invalid number of arguments to volume")
+        sb.setVolume(int(args.args[0]))
 
     else:
         raise Exception("Unknown command %s" % args.cmd)

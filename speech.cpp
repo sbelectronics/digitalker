@@ -2,6 +2,8 @@
 #include <Wire.h>
 #include <util/crc16.h>
 #include "speech.h"
+#include "amplifier.h"
+#include "display.h"
 
 // high when ready for new word
 #define PIN_INTR (1<<PC0)
@@ -122,7 +124,12 @@ uint16_t SpeechBufRemove()
 void SpeechAmpEnable(bool enable) 
 {
     if (enable) {
-        PORTC |= SHDN_PIN;
+        // check to see if it's already enabled
+        if ((PORTC & SHDN_PIN) == 0) {
+            PORTC |= SHDN_PIN;
+            delay(1); // give it a millisecond before sending I2C commands
+            AmpSetup();
+        }
     } else {
         PORTC &= (~SHDN_PIN);
     }
@@ -203,6 +210,8 @@ void SpeechUpdate()
 
     SpeechLastWordOut = data & 0xFF;
     SpeechLastBankOut = data >> 8;
+
+    DisplayUpdate(SpeechLastBankOut, SpeechLastWordOut);
 
     CMSLow();
     CSLow();

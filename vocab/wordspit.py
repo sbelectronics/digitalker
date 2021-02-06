@@ -1,3 +1,5 @@
+import sys
+
 bankNum = 0
 vocab = {}
 reverse = {}
@@ -24,11 +26,44 @@ for FN in ["words-bank0.txt", "words-bank1.txt", "words-bank2.txt", "words-bank3
 
     bankNum += 1
         
-from pprint import pprint
+if "-b" in sys.argv:
+    for bank in sorted(vocab.keys()):
+        words = vocab[bank]
+        if words:
+            sys.stdout.write(chr(0xFE) + chr(bank))
+            for index in sorted(words.keys()):
+                word = words[index]
+                sys.stdout.write(chr(index) + chr(len(word)) + word)
+    sys.stdout.write(chr(0xFF))
 
-print "vocab=",
-pprint(vocab)
+elif "-c" in sys.argv:
+    l = 0
+    for bank, words in vocab.items():
+        if words:
+            l = l + 2
+            for word in words.values():
+                l = l + len(word) + 2
+    l = l + 1
 
-print "reverse=",
-pprint(reverse)
+    print "#define WORDS_BYTES %d" % l
+    print "const uint8_t vocab[WORDS_BYTES] PROGMEM = {"
+    for bank in sorted(vocab.keys()):
+        words = vocab[bank]
+        if words:
+            print "  0xFE,\n  0x%02X," % bank
+            for index in sorted(words.keys()):
+                word = words[index]
+                print "  0x%02X,\n  0x%02X," % (index, len(word))
+                for ch in word:
+                    print "  0x%02X, /* %s */" % (ord(ch), ch)
+    print "  0xFF,"
+    print "};"
+else:
+    from pprint import pprint
+
+    print "vocab=",
+    pprint(vocab)
+
+    print "reverse=",
+    pprint(reverse)
 

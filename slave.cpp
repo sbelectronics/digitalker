@@ -74,27 +74,11 @@ void SlaveReceive(int howMany) {
     }
 }
 
-void SlaveRequest() {
-    uint8_t data = 0;
+uint8_t SlaveReadRegister(uint8_t reg)
+{
+    uint8_t data;
 
-    if (send_crc) {
-        Wire.write(next_crc);
-        send_crc = 0;
-        return;
-    }
-
-    if (receive_error) {
-        // on a receive error, send a two-byte sequence (0xFF,ErrorCode)
-        // NOTE: The CRC for a valid 0xFF is 0xF3, so never use 0xF3 as an errorcode
-        Wire.write(0xFF);
-        next_crc = receive_error;
-        send_crc = 1;
-        return;
-    }    
-
-    // NOTE: Must be kept fast to avoid clock stretching.
-
-    switch (RegPosition) {
+    switch (reg) {
         case REG_ECHO:
             data = EchoReg;
             break;
@@ -115,8 +99,35 @@ void SlaveRequest() {
             break;
         case REG_SPEECH_READY:
             data = SpeechReady;
-            break;                
+            break;
+        default:
+            data = 0;
+            break;
     }
+    return data;
+}
+
+void SlaveRequest() {
+    uint8_t data = 0;
+
+    if (send_crc) {
+        Wire.write(next_crc);
+        send_crc = 0;
+        return;
+    }
+
+    if (receive_error) {
+        // on a receive error, send a two-byte sequence (0xFF,ErrorCode)
+        // NOTE: The CRC for a valid 0xFF is 0xF3, so never use 0xF3 as an errorcode
+        Wire.write(0xFF);
+        next_crc = receive_error;
+        send_crc = 1;
+        return;
+    }    
+
+    // NOTE: Must be kept fast to avoid clock stretching.
+
+    data = SlaveReadRegister(RegPosition);
 
     Wire.write(data);
     next_crc = _crc8_ccitt_update(0, data);

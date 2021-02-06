@@ -11,5 +11,6 @@
 #define REG_SPEECH_QUEUE_WORD 14
 #define REG_SPEECH_LAST_BANK_OUT 15
 #define REG_SPEECH_READY 16
+#define REG_VOLUME 17
 
 #endif
