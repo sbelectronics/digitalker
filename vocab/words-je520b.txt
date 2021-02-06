@@ -6,7 +6,7 @@ forward
 from
 fuel
 function
-give
+get
 go
 good
 goodbye
@@ -15,7 +15,7 @@ grey
 have
 hello
 here
-hi
+high
 hit
 hour
 hundred
@@ -38,7 +38,7 @@ low
 45: magenta
 million
 minutes
-mint
+miss
 more
 move
 my
@@ -46,7 +46,7 @@ next
 no
 normal
 now
-oclock
+o'clock
 of
 off
 okay
@@ -64,7 +64,7 @@ program
 range
 read
 ready
-report
+record
 red
 repeat
 reverse
@@ -85,14 +85,14 @@ spell
 start
 stop
 system
-take
+tape
 target
 test
 than
 that
-the1
-the2
-the3
+the
+the-
+thee
 then
 there
 this
@@ -105,7 +105,7 @@ up
 use
 violet
 voice
-weight
+wait
 was
 wear
 welcome
@@ -113,7 +113,7 @@ welcome
 120: white
 will
 with
-were
+word
 yellow
 yes
 you're

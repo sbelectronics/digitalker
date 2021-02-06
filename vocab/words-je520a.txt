@@ -1,17 +1,42 @@
 8: jameco
+20ms
+40ms
+80ms
+640ms
+80hz
+800hz
+1khz
+2khz
+-ed
+-d
+-r
+-er
+-ng
+-ing
+-s
+-es
+-th
+-eth
+a-
+in-
+r-
+re-
+un-
 32: space
 33: attention
-thankyou
+thank-you
 number
 dollar
 percent
+and
+not
 40: open
 close
 time
 plus
-four
+or
 minus
-46:twice
+point
 divide
 zero
 one
@@ -25,11 +50,11 @@ eight
 nine
 line
 continue
-left
+less
 equal
-rate
+great
 help
-half
+at
 65: a
 b
 c
@@ -74,14 +99,14 @@ sixty
 seventy
 eighty
 ninety
-109: after
+after
 again
 all
-and
+an
 away
 back
 bar
-bin
+been
 before
 between
 black
@@ -89,7 +114,7 @@ blue
 break
 brown
 by
-candle
+cancel
 caution
 cent
 change
@@ -101,16 +126,16 @@ condition
 control
 correct
 cost
-136: cross
-137: cursor
-138: cyan
+cross
+cursor
+cyan
 dark
 data
 day
-degree
+decrease
 delete
 device
-din
+did
 disk
 display
 don't
