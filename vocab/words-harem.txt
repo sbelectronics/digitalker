@@ -1,0 +1,25 @@
+1: again
+3: attention
+button
+10: fifth
+11: first
+13: fourth
+15: go
+18: is
+21: low
+next
+25: please
+press
+28: second
+30: start
+32: thank
+34: third
+36: you
+52: time
+54: flow
+55: limit
+56: danger
+57: sixty
+leaving
+path
+60: have

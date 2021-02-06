@@ -3,8 +3,8 @@ import sys
 bankNum = 0
 vocab = {}
 reverse = {}
-for FN in ["words-bank0.txt", "words-bank1.txt", "words-bank2.txt", "words-bank3.txt",
-           "words-bank4.txt", "words-bank5.txt", "words-bank6.txt", "words-bank7.txt"]:
+for FN in ["words-ssr1-ssr2.txt", "words-ssr5-ssr6.txt", "words-je520a.txt", "words-je520b.txt",
+           "words-genesis-a.txt", "words-genesis-b.txt", "words-sensaphone.txt", "words-scorpion.txt"]:
     vocab[bankNum] = {}
 
     lines = open(FN).readlines()
