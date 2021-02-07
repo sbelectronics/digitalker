@@ -18,6 +18,9 @@ clear
 close
 complete
 connect
+continue
+copy
+correct
 date
 day
 decrease
@@ -40,7 +43,7 @@ exit
 fail
 failure
 farad
-first
+fast
 faster
 fifth
 fire
@@ -85,7 +88,8 @@ or
 pass
 per
 pico
-please
+place
+press
 pressure
 quarter
 range

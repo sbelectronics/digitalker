@@ -23,8 +23,11 @@
 #define PIN_BANK0 (1<<PB3)
 #define PIN_BANK1 (1<<PB5)
 #define PIN_BANK2 (1<<PB4)
+#define PIN_BANK3 (1<<PC2)
+#define PIN_BANK4 (1<<PC3)
 
 #define PIN_BANK_MASK (PIN_BANK0 | PIN_BANK1 | PIN_BANK2)
+#define PIN_BANK_HI_MASK (PIN_BANK3 | PIN_BANK4)
 
 // HIGH on SHDN enables the amplifier
 #define SHDN_PIN (1<<PC1)
@@ -179,6 +182,9 @@ void OutputBank(uint8_t bank)
     PORTB = (PORTB & ~PIN_BANK0) | ((bank & 1) ? PIN_BANK0 : 0);
     PORTB = (PORTB & ~PIN_BANK1) | ((bank & 2) ? PIN_BANK1 : 0);
     PORTB = (PORTB & ~PIN_BANK2) | ((bank & 4) ? PIN_BANK2 : 0);
+
+    PORTC = (PORTC & ~PIN_BANK3) | ((bank & 8) ? PIN_BANK3 : 0);
+    PORTC = (PORTC & ~PIN_BANK4) | ((bank & 16) ? PIN_BANK4 : 0);
 }
 
 void SpeechUpdate()
@@ -265,6 +271,7 @@ void SpeechInit()
 
     OutputBank(0x00);
     DDRB |= PIN_BANK_MASK;
+    DDRC |= PIN_BANK_HI_MASK;
 
     SpeechState = SPEECH_INIT;
 }
