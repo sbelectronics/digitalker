@@ -21,6 +21,7 @@ class DigitalkerTcp(DigitalkerBase):
     def connect(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
+        self.sock.send(chr(254))
 
     def drain(self):
         while True:
@@ -33,7 +34,8 @@ class DigitalkerTcp(DigitalkerBase):
 
     def readReg(self, num):
         self.drain()
-        self.sock.send(chr(220 + num))
+        self.sock.send(chr(252))
+        self.sock.send(chr(num))
 
         ready, o, e = select.select([self.sock], [], [], 1)
         if not ready:
@@ -48,13 +50,14 @@ class DigitalkerTcp(DigitalkerBase):
         w = (w & 0x0FF)
 
         if (b != self.lastBank):
-            self.sock.send(chr(240 + b))
+            self.sock.send(chr(250))
+            self.sock.send(chr(b))
             self.lastBank = b
 
         self.sock.send(chr(w))
 
     def setVolume(self, v):
-        self.sock.send(chr(219))
+        self.sock.send(chr(251))
         self.sock.send(chr(v))
 
 

@@ -1,0 +1,16 @@
+zero
+one
+two
+three
+four
+five
+six
+seven
+eight
+nine
+point
+20ms
+40ms
+80ms
+160ms
+320ms

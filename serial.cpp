@@ -26,23 +26,41 @@ void SerialUpdate()
       AmpSetVolume(data, true);
       return;
     }
+    switch (lastLastSerialByte) {
+      case 250:
+        // set bank
+        LastSerialBank = data;
+        return;
+      case 251:
+        // set volume
+        AmpSetVolume(data, true);
+        return;
+      case 252:
+        // read register
+        Serial.write(SlaveReadRegister(data));
+        return;
+      case 253:
+        // unused
+        return;
+      case 254:
+        // NOP
+        return;
+    }
 
-    if (data >= 240) {
-      LastSerialBank = data - 240;    
-    } else if (data >= 220) {
-      Serial.write(SlaveReadRegister(data-220));
-    } else if (data == 219) {
-      // do nothing -- next byte will be volume
-    } else if (LastSerialBank == NO_BANK) {
-      // ESP8266 spews out nonsense when it powers up,
-      // so ignore any commands until we have first received
-      // a bank select.
-      return;
-    } else {
-      uint16_t word;
-      LastSerialWord = data;
-      word = (LastSerialBank << 8) | data;
-      LastSerialInsertResult = SpeechBufInsert(word);
+    switch (data) {
+        case 250: // set bank escape sequence
+        case 251: // set volume escape sequence
+        case 252: // read register escape sequence
+        case 253: // unused escape sequence
+        case 254: // NOP
+            break;
+        
+        default:
+          uint16_t word;
+          LastSerialWord = data;
+          word = (LastSerialBank << 8) | data;
+          LastSerialInsertResult = SpeechBufInsert(word);
+          break;
     }
   }
 }

@@ -13,11 +13,12 @@ class DigitalkerSerial(DigitalkerBase):
 
     def connect(self):
         self.serial = serial.Serial(self.dev, 9600)
+        self.serial.write(chr(254))
 
     # NOTE: readReg untested
     def readReg(self, num):
         self.serial.reset_input_buffer()
-        self.serial.write(chr(220 + num))
+        self.serial.write(chr(252), chr(num))
 
         self.serial.timeout = 1
         try:
@@ -35,13 +36,13 @@ class DigitalkerSerial(DigitalkerBase):
         w = (w & 0x0FF)
 
         if (b != self.lastBank):
-            self.serial.write(chr(240 + b))
+            self.serial.write(chr(250), chr(b))
             self.lastBank = b
 
         self.serial.write(chr(w))
 
     def setVolume(self, v):
-        self.serial.write([chr(219), chr(v)])
+        self.serial.write([chr(251), chr(v)])
 
 def main():
     sb = DigitalkerSerial(dev="/dev/ttyUSB0")
